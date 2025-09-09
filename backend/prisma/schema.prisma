@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum DocumentType {
+  RG
+  CPF
+  PASSPORT
+  OTHER
+}
+
+enum DicomModality {
+  CR
+  CT
+  DX
+  MG
+  MR
+  NM
+  OT
+  PT
+  RF
+  US
+  XA
+}
+
+model Patient {
+  id  String @id @default(cuid())
+  name  String
+  birthDate  DateTime
+  documents Document[]
+  exams   Exam[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Document{
+  id  String @id @default(cuid())
+  type  DocumentType
+  document String @unique
+  other String?
+  
+  patientId String
+  patient Patient @relation (fields:[patientId], references:[id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Exam {
+  id  String @id @default(cuid())
+  idempotencyKey  String  @unique
+  modality  DicomModality
+  examDate  DateTime
+  
+  patientId String
+  patient Patient @relation (fields:[patientId], references:[id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
