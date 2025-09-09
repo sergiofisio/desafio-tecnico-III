@@ -3,9 +3,10 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateExamDto } from './dto/create-exam.dto';
 import { Prisma } from '@prisma/client';
+import { UpdateExamDto } from './dto/update-exam.dto';
 
 @Injectable()
 export class ExamsService {
@@ -50,19 +51,24 @@ export class ExamsService {
     });
   }
 
-  async findAll(page: number, pageSize: number, patientId: string) {
+  async findAll(page: number, pageSize: number, patientId?: string) {
     const skip = (page - 1) * pageSize;
     const take = pageSize;
+
+    const whereClause: Prisma.ExamWhereInput = {};
+    if (patientId) {
+      whereClause.patientId = patientId;
+    }
 
     const [exams, total] = await this.prisma.$transaction([
       this.prisma.exam.findMany({
         skip,
         take,
         orderBy: { createdAt: 'desc' },
-        where: { patientId },
+        where: whereClause,
       }),
       this.prisma.exam.count({
-        where: { patientId },
+        where: whereClause,
       }),
     ]);
 
@@ -73,5 +79,30 @@ export class ExamsService {
       pageSize,
       totalPages: Math.ceil(total / pageSize),
     };
+  }
+
+  async findOne(id: string) {
+    const exam = await this.prisma.exam.findUnique({
+      where: { id },
+      include: { patient: true },
+    });
+    if (!exam) {
+      throw new NotFoundException(`Exame não encontrado`);
+    }
+    return exam;
+  }
+
+  async update(id: string, updateExamDto: UpdateExamDto) {
+    await this.findOne(id);
+    return this.prisma.exam.update({
+      where: { id },
+      data: updateExamDto,
+    });
+  }
+
+  async remove(id: string) {
+    await this.findOne(id);
+    await this.prisma.exam.delete({ where: { id } });
+    return { message: `Exame Deletado com sucesso` };
   }
 }

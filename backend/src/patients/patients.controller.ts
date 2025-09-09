@@ -2,14 +2,18 @@ import {
   Body,
   Controller,
   DefaultValuePipe,
+  Delete,
   Get,
+  Param,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
   ValidationPipe,
 } from '@nestjs/common';
 import { PatientsService } from './patients.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
+import { UpdatePatientDto } from './dto/update-patient.dto';
 
 @Controller('patients')
 export class PatientsController {
@@ -26,5 +30,23 @@ export class PatientsController {
     @Query('pageSize', new DefaultValuePipe(10), ParseIntPipe) pageSize: number,
   ) {
     return this.patientsService.findAll(page, pageSize);
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.patientsService.findOne(id);
+  }
+
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body(new ValidationPipe()) updatePatientDto: UpdatePatientDto,
+  ) {
+    return this.patientsService.update(id, updatePatientDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.patientsService.remove(id);
   }
 }

@@ -2,20 +2,21 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { Prisma } from '@prisma/client';
+import { UpdatePatientDto } from './dto/update-patient.dto';
 
 @Injectable()
 export class PatientsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createPatienntDto: CreatePatientDto) {
-    const { documents, ...patient } = createPatienntDto;
+  async create(createPatientDto: CreatePatientDto) {
+    const { documents, ...patientData } = createPatientDto;
 
     const documentNumbers = documents.map((doc) => doc.document);
-
     const existingDocuments = await this.prisma.document.findMany({
       where: {
         document: { in: documentNumbers },
@@ -32,7 +33,7 @@ export class PatientsService {
     try {
       return await this.prisma.patient.create({
         data: {
-          ...patient,
+          ...patientData,
           documents: {
             create: documents,
           },
@@ -64,7 +65,7 @@ export class PatientsService {
       this.prisma.patient.findMany({
         skip,
         take,
-        orderBy: { name: 'desc' },
+        orderBy: { name: 'asc' },
         include: {
           documents: true,
         },
@@ -78,5 +79,73 @@ export class PatientsService {
       pageSize,
       totalPages: Math.ceil(total / pageSize),
     };
+  }
+
+  async findOne(id: string) {
+    const patient = await this.prisma.patient.findUnique({
+      where: { id },
+      include: { documents: true },
+    });
+    if (!patient) {
+      throw new NotFoundException(`Paciente não encontrado`);
+    }
+    return patient;
+  }
+
+  async update(id: string, updatePatientDto: UpdatePatientDto) {
+    const { documents, ...patientData } = updatePatientDto;
+
+    return this.prisma.$transaction(async (tx) => {
+      const patientExists = await tx.patient.findUnique({ where: { id } });
+      if (!patientExists) {
+        throw new NotFoundException(`Paciente não encontrado`);
+      }
+
+      if (Object.keys(patientData).length > 0) {
+        await tx.patient.update({
+          where: { id },
+          data: patientData,
+        });
+      }
+
+      if (documents) {
+        for (const doc of documents) {
+          if (doc.id) {
+            await tx.document.update({
+              where: { id: doc.id },
+              data: {
+                type: doc.type,
+                document: doc.document,
+                other: doc.other,
+              },
+            });
+          } else {
+            await tx.document.create({
+              data: {
+                patientId: id,
+                type: doc.type,
+                document: doc.document,
+                other: doc.other,
+              },
+            });
+          }
+        }
+      }
+
+      return tx.patient.findUnique({
+        where: { id },
+        include: { documents: true },
+      });
+    });
+  }
+
+  async remove(id: string) {
+    const { name } = await this.findOne(id);
+
+    await this.prisma.patient.delete({
+      where: { id },
+    });
+
+    return { message: `Paciente ${name} deletado com sucesso` };
   }
 }
