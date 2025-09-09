@@ -16,7 +16,7 @@ export class CreatePatientDto {
   @IsDate()
   @Type(() => Date)
   @IsNotEmpty()
-  birtDate: Date;
+  birthDate: Date;
 
   @IsArray()
   @ValidateNested({ each: true })

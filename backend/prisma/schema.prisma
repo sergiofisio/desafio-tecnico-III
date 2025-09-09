@@ -37,7 +37,7 @@ enum DicomModality {
 model Patient {
   id  String @id @default(cuid())
   name  String
-  bithDate  DateTime
+  birthDate  DateTime
   documents Document[]
   exams   Exam[]
 
