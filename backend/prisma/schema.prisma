@@ -34,6 +34,15 @@ enum DicomModality {
   XA
 }
 
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Patient {
   id  String @id @default(cuid())
   name  String
