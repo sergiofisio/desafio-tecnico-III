@@ -1,0 +1,71 @@
+<div class="container mx-auto p-6">
+  <div *ngIf="isLoading" class="text-center text-gray-500 py-8">Carregando...</div>
+
+  <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+    <p>{{ error }}</p>
+    <button
+      (click)="loadData()"
+      class="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded"
+    >
+      Tentar Novamente
+    </button>
+  </div>
+
+  <div *ngIf="!isLoading && !error && patient">
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <div class="flex justify-between items-start">
+        <div>
+          <h2 class="text-3xl font-bold text-gray-800">{{ patient.name }}</h2>
+          <p class="text-gray-600">
+            Data de Nascimento: {{ patient.birthDate | date : 'dd/MM/yyyy' : 'UTC' }}
+          </p>
+        </div>
+        <a routerLink="/patients" class="text-blue-600 hover:underline">Voltar para a Lista</a>
+      </div>
+      <hr class="my-4" />
+      <h3 class="text-lg font-semibold text-gray-700 mb-2">Documentos</h3>
+      <div class="text-gray-600">
+        <span *ngFor="let doc of patient.documents" class="mr-4">
+          <span class="font-medium">{{ doc.type }}:</span> {{ doc.document }}
+        </span>
+      </div>
+    </div>
+
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-gray-800">Exames do Paciente</h3>
+      <a
+        [routerLink]="['/exams/new']"
+        [queryParams]="{ patientId: patient.id }"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors"
+      >
+        Cadastrar Novo Exame
+      </a>
+    </div>
+
+    <div *ngIf="groupedExams.length > 0" class="space-y-6">
+      <div *ngFor="let group of groupedExams" class="bg-white shadow-md rounded-lg overflow-hidden">
+        <h4 class="font-semibold p-4 border-b" [ngClass]="getModalityStyles(group.modality).header">
+          Modalidade: {{ group.modality }}
+        </h4>
+        <ul class="divide-y divide-gray-200">
+          <li *ngFor="let exam of group.exams" class="p-4">
+            <div class="flex justify-between items-center">
+              <p class="text-gray-700">
+                Data do Exame: {{ exam.examDate | date : 'dd/MM/yyyy' : 'UTC' }}
+              </p>
+              <span
+                class="text-xs font-medium px-2.5 py-0.5 rounded-full"
+                [ngClass]="getModalityStyles(group.modality).header"
+                >{{ exam.modality }}</span
+              >
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <p *ngIf="groupedExams.length === 0" class="text-center text-gray-500 mt-4">
+      Nenhum exame cadastrado para este paciente.
+    </p>
+  </div>
+</div>
