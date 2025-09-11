@@ -9,11 +9,20 @@ import { CardComponent } from '../../../shared/components/card/card';
 import { ButtonComponent } from '../../../shared/components/button/button';
 import { ToastrService } from 'ngx-toastr';
 import { NgxMaskPipe } from 'ngx-mask';
+import { DocumentMaskPipe } from '../../../shared/pipes/document-mask-pipe';
 
 @Component({
   selector: 'app-patient-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, PageHeader, CardComponent, ButtonComponent, NgxMaskPipe],
+  imports: [
+    CommonModule,
+    RouterLink,
+    PageHeader,
+    CardComponent,
+    ButtonComponent,
+    NgxMaskPipe,
+    DocumentMaskPipe,
+  ],
   templateUrl: './patient-list.html',
 })
 export class PatientList implements OnInit {
@@ -58,15 +67,5 @@ export class PatientList implements OnInit {
         error: () => this.toastr.error(`Falha ao deletar o paciente.`),
       });
     }
-  }
-
-  getDocumentMask(type: Document['type']): string {
-    if (type === 'CPF') {
-      return '000.000.000-00';
-    }
-    if (type === 'RG') {
-      return '00.000.000-A';
-    }
-    return '';
   }
 }

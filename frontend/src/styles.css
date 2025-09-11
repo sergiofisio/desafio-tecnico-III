@@ -1,1 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
 @import 'tailwindcss';
+
+@theme inline {
+  --font-Noto: 'Noto Sans', sans-serif;
+  --font-Manrope: 'Manrope', sans-serif;
+  --color-blue-brand: #00438c;
+  --color-orange-brand: #ff6600;
+  --color-green-brand: #00cc00;
+  --color-text-primary: #2d3748;
+  --color-text-secondary: #718096;
+}

@@ -27,6 +27,10 @@ export class Patient {
     return this.http.post<PatientModel>(this.apiUrl, patient);
   }
 
+  updatePatient(id: string, patientData: Partial<Patient>): Observable<Patient> {
+    return this.http.patch<Patient>(`${this.apiUrl}/${id}`, patientData);
+  }
+
   deletePatient(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }

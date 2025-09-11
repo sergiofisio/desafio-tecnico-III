@@ -2,12 +2,16 @@
   [type]="type"
   [disabled]="disabled"
   [ngClass]="{
-    'bg-blue-600 hover:bg-blue-700': variant === 'primary',
+    'bg-blue-brand hover:bg-opacity-90': variant === 'primary',
+    'bg-orange-brand hover:bg-opacity-90': variant === 'accent',
+    'bg-gradient-to-r from-blue-500 to-green-brand hover:from-blue-600 hover:to-brand-green-dark':
+      variant === 'gradient',
+
     'bg-red-600 hover:bg-red-700': variant === 'danger',
     'bg-gray-200 hover:bg-gray-300 !text-gray-800': variant === 'document',
     'bg-gray-400 cursor-not-allowed': disabled
   }"
-  class="text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors focus:outline-none focus:shadow-outline cursor-pointer"
+  class="text-white font-bold py-2 px-4 rounded-lg shadow-md focus:outline-none focus:shadow-outline cursor-pointer hover:scale-110 transition-all duration-300 ease-in-out"
 >
   <ng-content></ng-content>
 </button>

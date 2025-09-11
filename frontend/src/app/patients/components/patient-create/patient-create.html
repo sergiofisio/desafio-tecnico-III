@@ -1,9 +1,18 @@
 <div class="container mx-auto p-6 max-w-2xl">
   <app-page-header title="Cadastrar Paciente">
-    <a actions routerLink="/patients" class="text-blue-600 hover:underline">Voltar para a Lista</a>
+    <a
+      actions
+      routerLink="/patients"
+      class="hover:underline hover:scale-110 transition-all duration-300 ease-in-out"
+      >Voltar para a Lista</a
+    >
   </app-page-header>
 
-  <form [formGroup]="patientForm" (ngSubmit)="onSubmit()">
+  <form
+    [formGroup]="patientForm"
+    (ngSubmit)="onSubmit()"
+    class="bg-white shadow-md px-4 py-6 rounded-lg flex flex-col gap-4"
+  >
     <app-card>
       <app-input label="Nome Completo" type="text" formControlName="name"></app-input>
       <app-input label="Data de Nascimento" type="date" formControlName="birthDate"></app-input>
@@ -23,7 +32,10 @@
               formControlName="type"
               class="shadow border rounded w-full py-2 px-3 text-gray-700"
             >
-              <option *ngFor="let type of documentTypes" [value]="type">{{ type }}</option>
+              <option [value]="doc.get('type')?.value">{{ doc.get('type')?.value }}</option>
+              <option *ngFor="let type of getAvailableDocumentTypes(i)" [value]="type">
+                {{ type }}
+              </option>
             </select>
           </div>
           <div class="flex-auto">
@@ -41,7 +53,7 @@
       <app-button (click)="addDocument()">+ Adicionar Documento</app-button>
     </app-card>
 
-    <div class="flex items-center justify-between mt-8">
+    <div class="flex justify-center w-full">
       <app-button type="submit" [disabled]="isSubmitting">
         {{ isSubmitting ? 'Salvando...' : 'Salvar Paciente' }}
       </app-button>

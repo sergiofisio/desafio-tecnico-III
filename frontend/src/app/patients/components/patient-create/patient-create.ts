@@ -29,7 +29,7 @@ export class PatientCreate {
   patientForm: FormGroup;
   isSubmitting = false;
   error: string | null = null;
-  documentTypes = ['RG', 'CPF', 'PASSPORT', 'OTHER'];
+  readonly allDocumentTypes = ['RG', 'CPF'];
 
   constructor(private fb: FormBuilder, private patientService: Patient, private router: Router) {
     this.patientForm = this.fb.group({
@@ -41,6 +41,17 @@ export class PatientCreate {
 
   get documents(): FormArray {
     return this.patientForm.get('documents') as FormArray;
+  }
+
+  getAvailableDocumentTypes(currentIndex: number): string[] {
+    const usedTypes = this.documents.value
+      .map((doc: any, index: number) => (index !== currentIndex ? doc.type : null))
+      .filter(Boolean);
+    return this.allDocumentTypes.filter((type) => !usedTypes.includes(type));
+  }
+
+  canAddDocument(): boolean {
+    return this.documents.length < this.allDocumentTypes.length;
   }
 
   getDocumentMask(index: number): string {
@@ -63,7 +74,18 @@ export class PatientCreate {
   }
 
   addDocument(): void {
-    this.documents.push(this.createDocumentGroup());
+    if (!this.canAddDocument()) return;
+
+    const availableTypes = this.allDocumentTypes.filter(
+      (type) => !this.documents.value.some((doc: any) => doc.type === type)
+    );
+
+    const newDocGroup = this.fb.group({
+      type: [availableTypes[0] || '', Validators.required],
+      document: ['', Validators.required],
+    });
+
+    this.documents.push(newDocGroup);
   }
 
   removeDocument(index: number): void {

@@ -12,32 +12,46 @@
   </div>
 
   <div *ngIf="!isLoading && !error && patient">
-    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+    <div class="shadow-md rounded-lg p-6 mb-8">
       <div class="flex justify-between items-start">
         <div>
-          <h2 class="text-3xl font-bold text-gray-800">{{ patient.name }}</h2>
-          <p class="text-gray-600">
+          <h2 class="text-3xl font-bold">{{ patient.name }}</h2>
+          <p class="">
             Data de Nascimento: {{ patient.birthDate | date : 'dd/MM/yyyy' : 'UTC' }}
-            <span *ngIf="patient.birthDate" class="ml-2 font-semibold text-blue-600">
+            <span *ngIf="patient.birthDate" class="ml-2 font-semibold">
               ({{ calculateAge(patient.birthDate) }})
             </span>
           </p>
         </div>
-        <a routerLink="/patients" class="text-blue-600 hover:underline">Voltar para a Lista</a>
+        <div class="flex items-center gap-10">
+          <a
+            [routerLink]="['/patients', patient.id, 'edit']"
+            class="bg-gray-200 hover:scale-110 transition-all duration-300 ease-in-out text-gray-800 font-semibold py-2 px-4 rounded-lg text-sm"
+          >
+            Editar
+          </a>
+          <a
+            routerLink="/patients"
+            class="hover:underline hover:scale-110 transition-all duration-300 ease-in-out"
+            >Voltar para a Lista de pacients</a
+          >
+        </div>
       </div>
       <hr class="my-4" />
-      <h3 class="text-lg font-semibold text-gray-700 mb-2">Documentos</h3>
-      <div class="text-gray-600">
+      <h3 class="text-lg font-semibold mb-2">Documentos</h3>
+      <div class="">
         <span *ngFor="let doc of patient.documents" class="mr-4">
           <span class="font-medium">{{ doc.type }}:</span>
-          {{ doc.document | mask : getDocumentMask(doc.type) }}
+          {{ doc.document | mask : (doc.type | documentMask) }}
         </span>
       </div>
     </div>
 
     <div class="flex justify-between items-center mb-6">
       <h3 class="text-2xl font-bold text-gray-800">Exames do Paciente</h3>
-      <app-button (click)="navigateToCreateExam()"> Cadastrar Novo Exame </app-button>
+      <app-button (click)="navigateToCreateExam()" variant="gradient">
+        Cadastrar Novo Exame
+      </app-button>
     </div>
 
     <div *ngIf="groupedExams.length > 0" class="space-y-6">

@@ -1,17 +1,20 @@
-<nav *ngIf="authService.isAuthenticated()" class="bg-gray-800 text-white p-4 shadow-md">
-  <div class="container mx-auto flex justify-between items-center">
-    <div class="flex items-center space-x-8">
-      <a routerLink="/patients" class="text-xl font-bold hover:text-gray-300">Mobilemed</a>
-      <div class="flex space-x-4">
-        <a routerLink="/patients" routerLinkActive="text-blue-400" class="hover:text-gray-300">
-          Pacientes
+<main class="bg-gradient-to-b text-white from-[#232529] via-[#232529] to-[#0D0D57]">
+  <nav *ngIf="authService.isAuthenticated()" class="text-white p-4 shadow-sm shadow-white">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="flex items-center space-x-8">
+        <a routerLink="/patients" class="flex items-center hover:text-gray-300">
+          <img class="w-10" src="assets/logo-branco.svg" />
+          <div class="flex text-2xl">
+            <h1 class="font-bold">mobile</h1>
+            <span class="text-brand-green">med</span>
+          </div>
         </a>
       </div>
+      <app-button variant="danger" (click)="authService.logout()"> Logout </app-button>
     </div>
-    <app-button variant="danger" (click)="authService.logout()"> Logout </app-button>
-  </div>
-</nav>
+  </nav>
 
-<main class="bg-gray-50 min-h-screen">
-  <router-outlet></router-outlet>
+  <section [@routeAnimations]="prepareRoute(outlet)" class="min-h-screen">
+    <router-outlet #outlet="outlet"></router-outlet>
+  </section>
 </main>

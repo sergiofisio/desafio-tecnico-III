@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 import { intervalToDuration, formatDuration } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { NgxMaskPipe } from 'ngx-mask';
+import { DocumentMaskPipe } from '../../../shared/pipes/document-mask-pipe';
 
 interface ExamGroup {
   modality: string;
@@ -21,7 +22,7 @@ interface ExamGroup {
 @Component({
   selector: 'app-patient-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, DatePipe, ButtonComponent, NgxMaskPipe],
+  imports: [CommonModule, RouterLink, DatePipe, ButtonComponent, NgxMaskPipe, DocumentMaskPipe],
   templateUrl: './patient-detail.html',
 })
 export class PatientDetail implements OnInit {
@@ -80,6 +81,8 @@ export class PatientDetail implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: ({ patient, exams }) => {
+          console.log({ patient });
+
           this.patient = patient;
           this.groupAndSortExams(exams.data);
         },
@@ -156,15 +159,5 @@ export class PatientDetail implements OnInit {
       format: ['years', 'months', 'days'],
       locale: ptBR,
     });
-  }
-
-  getDocumentMask(type: Document['type']): string {
-    if (type === 'CPF') {
-      return '000.000.000-00';
-    }
-    if (type === 'RG') {
-      return '00.000.000-A';
-    }
-    return '';
   }
 }
