@@ -4,7 +4,6 @@ import {
   DefaultValuePipe,
   Delete,
   Get,
-  HttpCode,
   HttpStatus,
   Param,
   ParseIntPipe,

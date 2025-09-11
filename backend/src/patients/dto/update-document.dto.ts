@@ -1,8 +1,14 @@
 import { DocumentType } from '@prisma/client';
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 
 export class UpdateDocumentDto {
-  @IsString()
+  @IsUUID()
   @IsOptional()
   id?: string;
 
