@@ -4,26 +4,27 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { PatientModel } from '../../../patients/models/patient.model';
 import { Exam } from '../../services/exam';
-import { Patient } from '../../../patients/services/patient';
 import { finalize } from 'rxjs';
+import { ButtonComponent } from '../../../shared/components/button/button';
+import { StateTransfer } from '../../../shared/services/state-transfer';
 
 @Component({
   selector: 'app-exam-create',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, ButtonComponent],
   templateUrl: './exam-create.html',
 })
 export class ExamCreate implements OnInit {
   examForm: FormGroup;
   isSubmitting = false;
   error: string | null = null;
-  patients: PatientModel[] = [];
+  patientContext: PatientModel | null = null;
   modalities = ['CR', 'CT', 'DX', 'MG', 'MR', 'NM', 'OT', 'PT', 'RF', 'US', 'XA'];
 
   constructor(
     private fb: FormBuilder,
     private examService: Exam,
-    private patientService: Patient,
+    private stateTransferService: StateTransfer,
     private router: Router
   ) {
     this.examForm = this.fb.group({
@@ -34,13 +35,13 @@ export class ExamCreate implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadPatients();
-  }
+    this.patientContext = this.stateTransferService.getPatientContext();
 
-  loadPatients(): void {
-    this.patientService.getPatients(1, 100).subscribe((response) => {
-      this.patients = response.data;
-    });
+    if (this.patientContext) {
+      this.examForm.get('patientId')?.setValue(this.patientContext.id);
+    } else {
+      this.router.navigate(['/patients']);
+    }
   }
 
   onSubmit(): void {
@@ -62,7 +63,7 @@ export class ExamCreate implements OnInit {
       .createExam(examPayload)
       .pipe(finalize(() => (this.isSubmitting = false)))
       .subscribe({
-        next: () => this.router.navigate(['/exams']),
+        next: () => this.router.navigate(['/patients', formValue.patientId]),
         error: (err) => {
           this.error = err.error.message || 'Ocorreu um erro ao salvar o exame.';
         },

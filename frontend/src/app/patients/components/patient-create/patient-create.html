@@ -1,91 +1,53 @@
 <div class="container mx-auto p-6 max-w-2xl">
-  <div class="flex justify-between items-center mb-6">
-    <h2 class="text-3xl font-bold text-gray-800">Cadastrar Paciente</h2>
-    <a routerLink="/patients" class="text-blue-600 hover:underline">Voltar para a Lista</a>
-  </div>
+  <app-page-header title="Cadastrar Paciente">
+    <a actions routerLink="/patients" class="text-blue-600 hover:underline">Voltar para a Lista</a>
+  </app-page-header>
 
-  <form
-    [formGroup]="patientForm"
-    (ngSubmit)="onSubmit()"
-    class="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4"
-  >
-    <div class="mb-4">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Nome Completo</label>
-      <input
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        id="name"
-        type="text"
-        formControlName="name"
-      />
-    </div>
+  <form [formGroup]="patientForm" (ngSubmit)="onSubmit()">
+    <app-card>
+      <app-input label="Nome Completo" type="text" formControlName="name"></app-input>
+      <app-input label="Data de Nascimento" type="date" formControlName="birthDate"></app-input>
 
-    <div class="mb-6">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="bithDate"
-        >Data de Nascimento</label
-      >
-      <input
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        id="bithDate"
-        type="date"
-        formControlName="birthDate"
-      />
-    </div>
+      <hr class="my-6" />
+      <h3 class="text-xl font-bold text-gray-800 mb-4">Documentos</h3>
 
-    <hr class="my-6" />
-    <h3 class="text-xl font-bold text-gray-800 mb-4">Documentos</h3>
-
-    <div formArrayName="documents">
-      <div
-        *ngFor="let doc of documents.controls; let i = index"
-        [formGroupName]="i"
-        class="flex items-end space-x-2 mb-4"
-      >
-        <div class="flex-1">
-          <label class="block text-gray-700 text-sm font-bold mb-2">Tipo</label>
-          <select
-            formControlName="type"
-            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          >
-            <option *ngFor="let type of documentTypes" [value]="type">{{ type }}</option>
-          </select>
-        </div>
-        <div class="flex-auto">
-          <label class="block text-gray-700 text-sm font-bold mb-2">Número</label>
-          <input
-            formControlName="document"
-            placeholder="Número do Documento"
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
-        </div>
-        <button
-          type="button"
-          (click)="removeDocument(i)"
-          class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline"
+      <div formArrayName="documents">
+        <div
+          *ngFor="let doc of documents.controls; let i = index"
+          [formGroupName]="i"
+          class="flex items-end space-x-2 mb-4"
         >
-          X
-        </button>
+          <div class="flex-1">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Tipo</label>
+            <select
+              formControlName="type"
+              class="shadow border rounded w-full py-2 px-3 text-gray-700"
+            >
+              <option *ngFor="let type of documentTypes" [value]="type">{{ type }}</option>
+            </select>
+          </div>
+          <div class="flex-auto">
+            <input
+              formControlName="document"
+              placeholder="Número do Documento"
+              [mask]="getDocumentMask(i)"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+            />
+          </div>
+          <app-button (click)="removeDocument(i)">X</app-button>
+        </div>
       </div>
-    </div>
 
-    <button
-      type="button"
-      (click)="addDocument()"
-      class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-    >
-      + Adicionar Documento
-    </button>
+      <app-button (click)="addDocument()">+ Adicionar Documento</app-button>
+    </app-card>
 
     <div class="flex items-center justify-between mt-8">
-      <button
-        type="submit"
-        [disabled]="isSubmitting"
-        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md focus:outline-none focus:shadow-outline disabled:bg-gray-400"
-      >
+      <app-button type="submit" [disabled]="isSubmitting">
         {{ isSubmitting ? 'Salvando...' : 'Salvar Paciente' }}
-      </button>
+      </app-button>
     </div>
 
-    <div *ngIf="error" class="mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+    <div *ngIf="error" class="mt-4 bg-red-100 border text-red-700 px-4 py-3 rounded">
       {{ error }}
     </div>
   </form>

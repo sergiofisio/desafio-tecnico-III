@@ -22,4 +22,8 @@ export class Exam {
   createExam(exam: Partial<Exam>): Observable<Exam> {
     return this.http.post<Exam>(this.apiUrl, exam);
   }
+
+  deleteExam(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
 }

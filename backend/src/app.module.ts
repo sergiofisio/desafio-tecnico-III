@@ -18,7 +18,7 @@ import { LoggerMiddleware } from './common/middleware/logger/logger.middleware';
     ExamsModule,
     ThrottlerModule.forRoot({
       ttl: 60000,
-      limit: 20,
+      limit: 100,
     }),
     ConfigModule.forRoot({
       isGlobal: true,

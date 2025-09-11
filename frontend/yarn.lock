@@ -172,6 +172,13 @@
     ora "8.2.0"
     rxjs "7.8.2"
 
+"@angular/animations@^20.3.0":
+  version "20.3.0"
+  resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-20.3.0.tgz#ce5381c8f0c22e0be0a2a2b39f83dcbdd14e5bbc"
+  integrity sha512-rCojVsJHaReDfSB4lwcWYJAfbkFXQmcdivdN5m1NavuSlKpWoLw4fLkxkcuOXDjUEwNSb45hRI4ixcwrcuQtmw==
+  dependencies:
+    tslib "^2.3.0"
+
 "@angular/build@^20.2.2":
   version "20.2.2"
   resolved "https://registry.yarnpkg.com/@angular/build/-/build-20.2.2.tgz#18a593b7ad69bee96596dabc5b39a9f4a29a2fcb"
@@ -2114,6 +2121,11 @@ custom-event@~1.0.0:
   resolved "https://registry.yarnpkg.com/custom-event/-/custom-event-1.0.1.tgz#5d02a46850adf1b4a317946a3928fccb5bfd0425"
   integrity sha512-GAj5FOq0Hd+RsCGVJxZuKaIDXDf3h6GQoNEjFgbLLI/trgtavwUbSnZ5pVfg27DVCaWjIohryS0JFwIJyT2cMg==
 
+date-fns@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-4.1.0.tgz#64b3d83fff5aa80438f5b1a633c2e83b8a1c2d14"
+  integrity sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==
+
 date-format@^4.0.14:
   version "4.0.14"
   resolved "https://registry.yarnpkg.com/date-format/-/date-format-4.0.14.tgz#7a8e584434fb169a521c8b7aa481f355810d9400"
@@ -3529,6 +3541,20 @@ negotiator@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-1.0.0.tgz#b6c91bb47172d69f93cfd7c357bbb529019b5f6a"
   integrity sha512-8Ofs/AUQh8MaEcrlq5xOX0CQ9ypTF5dl78mjlMNfOK08fzpgTHQRQPBxcPlEtIw0yRpws+Zo/3r+5WRby7u3Gg==
+
+ngx-mask@^20.0.3:
+  version "20.0.3"
+  resolved "https://registry.yarnpkg.com/ngx-mask/-/ngx-mask-20.0.3.tgz#56f1a9a25a32b15fa97b18531217be3ffd8df978"
+  integrity sha512-5bmrgbFGudj0mFN6cPv/TI+cFJxT4l61mLIFskdvaXsJL/Oj7thRmWYqvqHXjCboOcx8gT6T/Zypl5u9l2J8Jg==
+  dependencies:
+    tslib "^2.3.0"
+
+ngx-toastr@^19.0.0:
+  version "19.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-toastr/-/ngx-toastr-19.0.0.tgz#51ebb9cb8f8b2f43704d45b560f6d8997f556016"
+  integrity sha512-6pTnktwwWD+kx342wuMOWB4+bkyX9221pAgGz3SHOJH0/MI9erLucS8PeeJDFwbUYyh75nQ6AzVtolgHxi52dQ==
+  dependencies:
+    tslib "^2.3.0"
 
 node-addon-api@^6.1.0:
   version "6.1.0"

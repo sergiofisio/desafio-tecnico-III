@@ -1,14 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { PatientModel } from '../../models/patient.model';
+import { Document, PatientModel } from '../../models/patient.model';
 import { Patient } from './../../services/patient';
 import { finalize } from 'rxjs';
+import { PageHeader } from '../../../shared/components/page-header/page-header';
+import { CardComponent } from '../../../shared/components/card/card';
+import { ButtonComponent } from '../../../shared/components/button/button';
+import { ToastrService } from 'ngx-toastr';
+import { NgxMaskPipe } from 'ngx-mask';
 
 @Component({
   selector: 'app-patient-list',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, PageHeader, CardComponent, ButtonComponent, NgxMaskPipe],
   templateUrl: './patient-list.html',
 })
 export class PatientList implements OnInit {
@@ -20,7 +25,7 @@ export class PatientList implements OnInit {
   pageSize = 10;
   totalPatients = 0;
 
-  constructor(private patientService: Patient) {}
+  constructor(private patientService: Patient, private toastr: ToastrService) {}
 
   ngOnInit(): void {
     this.loadPatients();
@@ -41,5 +46,27 @@ export class PatientList implements OnInit {
           this.error = 'Falha ao carregar pacientes. Tente novamente.';
         },
       });
+  }
+
+  deletePatient(id: string, name: string): void {
+    if (confirm(`Tem certeza que deseja deletar o paciente "${name}"?`)) {
+      this.patientService.deletePatient(id).subscribe({
+        next: () => {
+          this.toastr.success(`Paciente "${name}" deletado com sucesso.`);
+          this.loadPatients();
+        },
+        error: () => this.toastr.error(`Falha ao deletar o paciente.`),
+      });
+    }
+  }
+
+  getDocumentMask(type: Document['type']): string {
+    if (type === 'CPF') {
+      return '000.000.000-00';
+    }
+    if (type === 'RG') {
+      return '00.000.000-A';
+    }
+    return '';
   }
 }
