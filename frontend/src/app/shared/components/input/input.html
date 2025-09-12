@@ -1,0 +1,27 @@
+<div class="mb-4">
+  <label class="block text-gray-700 text-sm font-bold mb-2">
+    {{ label }}
+  </label>
+  <div class="relative">
+    <input
+      [type]="type === 'password' && showPassword ? 'text' : type"
+      [placeholder]="placeholder || label"
+      [mask]="mask"
+      [value]="value"
+      (input)="onInputChange($event)"
+      (blur)="onTouched()"
+      [disabled]="disabled"
+      class="shadow appearance-none border rounded w-full py-2 px-3 pr-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+    />
+
+    <button
+      *ngIf="type === 'password'"
+      type="button"
+      (click)="togglePasswordVisibility()"
+      class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none cursor-pointer"
+    >
+      <img *ngIf="showPassword" src="assets/View.svg" />
+      <img *ngIf="!showPassword" src="assets/View_off.svg" />
+    </button>
+  </div>
+</div>

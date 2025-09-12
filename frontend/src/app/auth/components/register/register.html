@@ -1,0 +1,47 @@
+<div class="flex items-center justify-center min-h-screen">
+  <div class="absolute top-5 w-full flex items-center justify-center gap-2">
+    <img class="w-32" src="assets/logo.svg" />
+    <div class="flex text-5xl">
+      <h1 class="font-bold">mobile</h1>
+      <span>med</span>
+    </div>
+  </div>
+  <div class="px-8 py-6 text-left bg-white shadow-lg rounded-lg max-w-sm w-full">
+    <h3 class="text-2xl font-bold text-center text-gray-800">Criar Conta</h3>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+      <app-input
+        label="Nome"
+        type="text"
+        placeholder="Nome Completo"
+        formControlName="name"
+      ></app-input>
+
+      <app-input
+        label="Email"
+        type="email"
+        placeholder="seu@email.com"
+        formControlName="email"
+      ></app-input>
+
+      <app-input
+        label="Senha"
+        type="password"
+        placeholder="Mínimo 6 caracteres"
+        formControlName="password"
+      ></app-input>
+      <div class="flex flex-col items-center justify-center">
+        <app-button type="submit" [disabled]="isSubmitting">
+          {{ isSubmitting ? 'Registrando...' : 'Registrar' }}
+        </app-button>
+
+        <a routerLink="/login" class="text-sm text-blue-600 hover:underline mt-4"
+          >Já tem uma conta? Faça o login</a
+        >
+      </div>
+      <div *ngIf="error" class="mt-4 text-red-600 text-sm text-center">{{ error }}</div>
+      <div *ngIf="successMessage" class="mt-4 text-green-600 text-sm text-center">
+        {{ successMessage }}
+      </div>
+    </form>
+  </div>
+</div>

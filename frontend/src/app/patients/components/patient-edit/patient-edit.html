@@ -1,0 +1,74 @@
+<div class="container mx-auto p-6 max-w-2xl">
+  <div *ngIf="isLoading" class="text-center text-gray-500 py-8">
+    Carregando dados do paciente...
+  </div>
+
+  <div *ngIf="!isLoading">
+    <app-page-header title="Editar Paciente">
+      <a
+        actions
+        [routerLink]="['/patients', patientId]"
+        class="hover:underline hover:scale-110 transition-all duration-300 ease-in-out"
+        alt="Cancelar"
+      >
+        Cancelar
+      </a>
+    </app-page-header>
+
+    <form
+      [formGroup]="patientForm"
+      (ngSubmit)="onSubmit()"
+      class="bg-white shadow-md px-4 py-6 rounded-lg flex flex-col gap-4"
+    >
+      <app-card>
+        <app-input label="Nome Completo" type="text" formControlName="name"></app-input>
+        <app-input label="Data de Nascimento" type="date" formControlName="birthDate"></app-input>
+
+        <hr class="my-6" />
+        <h3 class="text-xl font-bold text-gray-800 mb-4">Documentos</h3>
+
+        <div formArrayName="documents">
+          <div
+            *ngFor="let doc of documents.controls; let i = index"
+            [formGroupName]="i"
+            class="flex items-end space-x-2 mb-4"
+          >
+            <input type="hidden" formControlName="id" />
+            <div class="flex-1">
+              <label class="block text-gray-700 text-sm font-bold mb-2">Tipo</label>
+              <select
+                formControlName="type"
+                class="shadow border rounded w-full py-2 px-3 text-gray-700"
+              >
+                <option *ngFor="let type of allDocumentTypes" [value]="type">{{ type }}</option>
+              </select>
+            </div>
+            <div class="flex-auto">
+              <label class="block text-gray-700 text-sm font-bold mb-2">Número</label>
+              <input
+                formControlName="document"
+                placeholder="Número do Documento"
+                [mask]="getDocumentMask(i)"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+              />
+            </div>
+          </div>
+        </div>
+
+        <app-button *ngIf="documents.length < 2" (click)="addDocument()"
+          >+ Adicionar Novo Documento</app-button
+        >
+      </app-card>
+
+      <div class="flex items-center justify-between mt-8">
+        <app-button type="submit" [disabled]="isSubmitting">
+          {{ isSubmitting ? 'Salvando...' : 'Salvar Alterações' }}
+        </app-button>
+      </div>
+
+      <div *ngIf="error" class="mt-4 bg-red-100 border text-red-700 px-4 py-3 rounded">
+        {{ error }}
+      </div>
+    </form>
+  </div>
+</div>
