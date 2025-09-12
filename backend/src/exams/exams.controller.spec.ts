@@ -5,6 +5,7 @@ import { CreateExamDto } from './dto/create-exam.dto';
 import { UpdateExamDto } from './dto/update-exam.dto';
 import { DicomModality } from '@prisma/client';
 import { HttpStatus } from '@nestjs/common';
+import { Response } from 'express';
 
 const mockExamsService = {
   create: jest.fn(),
@@ -46,6 +47,10 @@ describe('ExamsController', () => {
       examDate: new Date(),
     };
 
+    const mockResponse = {
+      status: jest.fn().mockReturnThis(),
+    } as unknown as Response;
+
     it('should return a new exam with a custom status code field when isNew is true', async () => {
       const newExamResult = {
         exam: { id: 'exam-1', ...createDto },
@@ -53,13 +58,11 @@ describe('ExamsController', () => {
       };
       mockExamsService.create.mockResolvedValue(newExamResult);
 
-      const result = await controller.create(createDto);
+      const result = await controller.create(createDto, mockResponse);
 
       expect(service.create).toHaveBeenCalledWith(createDto);
-      expect(result).toEqual({
-        statusCde: HttpStatus.CREATED,
-        ...newExamResult.exam,
-      });
+      expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.CREATED);
+      expect(result).toEqual(newExamResult.exam);
     });
 
     it('should return an existing exam when isNew is false', async () => {
@@ -69,9 +72,10 @@ describe('ExamsController', () => {
       };
       mockExamsService.create.mockResolvedValue(existingExamResult);
 
-      const result = await controller.create(createDto);
+      const result = await controller.create(createDto, mockResponse);
 
       expect(service.create).toHaveBeenCalledWith(createDto);
+      expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.OK);
       expect(result).toEqual(existingExamResult.exam);
     });
   });

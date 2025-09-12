@@ -34,8 +34,17 @@ enum DicomModality {
   XA
 }
 
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Patient {
-  id  String @id @default(cuid())
+  id  String @id @default(uuid())
   name  String
   birthDate  DateTime
   documents Document[]
@@ -46,7 +55,7 @@ model Patient {
 }
 
 model Document{
-  id  String @id @default(cuid())
+  id  String @id @default(uuid())
   type  DocumentType
   document String @unique
   other String?
@@ -59,7 +68,7 @@ model Document{
 }
 
 model Exam {
-  id  String @id @default(cuid())
+  id  String @id @default(uuid())
   idempotencyKey  String  @unique
   modality  DicomModality
   examDate  DateTime

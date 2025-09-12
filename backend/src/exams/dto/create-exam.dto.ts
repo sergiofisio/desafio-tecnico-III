@@ -1,9 +1,9 @@
 import { DicomModality } from '@prisma/client';
 import { Type } from 'class-transformer';
-import { IsDate, IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsDate, IsEnum, IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
 export class CreateExamDto {
-  @IsString()
+  @IsUUID()
   @IsNotEmpty()
   patientId: string;
 

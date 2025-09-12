@@ -1,0 +1,57 @@
+<div class="container mx-auto p-6 max-w-2xl">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-3xl font-bold text-gray-800">Cadastrar Exame</h2>
+    <a
+      routerLink="/patients"
+      class="hover:underline hover:scale-110 transition-all duration-300 ease-in-out"
+      >Voltar para a Lista</a
+    >
+  </div>
+
+  <form
+    [formGroup]="examForm"
+    (ngSubmit)="onSubmit()"
+    class="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4"
+  >
+    <div class="container mx-auto p-6 max-w-2xl">
+      <form [formGroup]="examForm" (ngSubmit)="onSubmit()" class="bg-white ...">
+        <div *ngIf="patientContext" class="mb-6 p-4 bg-gray-100 rounded-lg">
+          <label class="block text-gray-700 text-sm font-bold mb-1">Paciente</label>
+          <p class="text-gray-900 font-semibold text-lg">{{ patientContext.name }}</p>
+        </div>
+      </form>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="modality">Modalidade</label>
+      <select
+        formControlName="modality"
+        id="modality"
+        class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+      >
+        <option value="" disabled>Selecione uma modalidade</option>
+        <option *ngFor="let modality of modalities" [value]="modality">{{ modality }}</option>
+      </select>
+    </div>
+
+    <div class="mb-6">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="examDate">Data do Exame</label>
+      <input
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="examDate"
+        type="date"
+        formControlName="examDate"
+      />
+    </div>
+
+    <div class="flex items-center justify-between mt-8">
+      <app-button type="submit" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Salvando...' : 'Salvar Exame' }}
+      </app-button>
+    </div>
+
+    <div *ngIf="error" class="mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+      {{ error }}
+    </div>
+  </form>
+</div>

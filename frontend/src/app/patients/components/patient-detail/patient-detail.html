@@ -1,0 +1,95 @@
+<div class="container mx-auto p-6">
+  <div *ngIf="isLoading" class="text-center text-gray-500 py-8">Carregando...</div>
+
+  <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+    <p>{{ error }}</p>
+    <button
+      (click)="loadData()"
+      class="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded"
+    >
+      Tentar Novamente
+    </button>
+  </div>
+
+  <div *ngIf="!isLoading && !error && patient">
+    <div class="p-6 mb-8 shadow-md border-2 border-white rounded-3xl">
+      <div class="flex justify-between items-start">
+        <div>
+          <h2 class="text-3xl font-bold">{{ patient.name }}</h2>
+          <p class="">
+            Data de Nascimento: {{ patient.birthDate | date : 'dd/MM/yyyy' : 'UTC' }}
+            <span *ngIf="patient.birthDate" class="ml-2 font-semibold">
+              ({{ calculateAge(patient.birthDate) }})
+            </span>
+          </p>
+        </div>
+        <div class="flex items-center gap-10">
+          <a
+            [routerLink]="['/patients', patient.id, 'edit']"
+            class="bg-gray-200 hover:scale-110 transition-all duration-300 ease-in-out text-gray-800 font-semibold py-2 px-4 rounded-lg text-sm"
+          >
+            Editar
+          </a>
+          <a
+            routerLink="/patients"
+            class="hover:underline hover:scale-110 transition-all duration-300 ease-in-out"
+            >Voltar para a Lista de pacientes</a
+          >
+        </div>
+      </div>
+      <hr class="my-4" />
+      <h3 class="text-lg font-semibold mb-2">Documentos</h3>
+      <div class="">
+        <span *ngFor="let doc of patient.documents" class="mr-4">
+          <span class="font-medium">{{ doc.type }}:</span>
+          {{ doc.document | mask : (doc.type | documentMask) }}
+        </span>
+      </div>
+    </div>
+
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-gray-800">Exames do Paciente</h3>
+      <app-button (click)="navigateToCreateExam()" variant="gradient">
+        Cadastrar Novo Exame
+      </app-button>
+    </div>
+
+    <div *ngIf="groupedExams.length > 0" class="space-y-6 max-h-[45vh] overflow-y-auto p-2">
+      <div *ngFor="let group of groupedExams" class="bg-white shadow-md rounded-lg overflow-hidden">
+        <h4 class="font-semibold p-4 border-b" [ngClass]="getModalityStyles(group.modality).header">
+          Modalidade: {{ group.modality }}
+        </h4>
+        <ul class="divide-y divide-gray-200">
+          <li *ngFor="let exam of group.exams" class="p-4">
+            <div class="flex justify-between items-center">
+              <div>
+                <p class="text-gray-700">
+                  Data do Exame: {{ exam.examDate | date : 'dd/MM/yyyy' : 'UTC' }}
+                </p>
+
+                <span class="text-sm" [ngClass]="getExamStatus(exam.examDate).cssClass">
+                  {{ getExamStatus(exam.examDate).text }}
+                </span>
+              </div>
+              <div class="flex items-center space-x-4">
+                <span
+                  class="text-xs font-medium px-2.5 py-0.5 rounded-full"
+                  [ngClass]="getModalityStyles(exam.modality).tag"
+                >
+                  {{ exam.modality }}
+                </span>
+                <app-button variant="danger" (click)="deleteExam(exam.id, $event)">
+                  Deletar
+                </app-button>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <p *ngIf="groupedExams.length === 0" class="text-center text-gray-500 mt-4">
+      Nenhum exame cadastrado para este paciente.
+    </p>
+  </div>
+</div>
