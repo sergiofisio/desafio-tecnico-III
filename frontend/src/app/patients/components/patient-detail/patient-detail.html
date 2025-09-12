@@ -12,7 +12,7 @@
   </div>
 
   <div *ngIf="!isLoading && !error && patient">
-    <div class="shadow-md rounded-lg p-6 mb-8">
+    <div class="p-6 mb-8 shadow-md border-2 border-white rounded-3xl">
       <div class="flex justify-between items-start">
         <div>
           <h2 class="text-3xl font-bold">{{ patient.name }}</h2>
@@ -33,7 +33,7 @@
           <a
             routerLink="/patients"
             class="hover:underline hover:scale-110 transition-all duration-300 ease-in-out"
-            >Voltar para a Lista de pacients</a
+            >Voltar para a Lista de pacientes</a
           >
         </div>
       </div>
@@ -54,7 +54,7 @@
       </app-button>
     </div>
 
-    <div *ngIf="groupedExams.length > 0" class="space-y-6">
+    <div *ngIf="groupedExams.length > 0" class="space-y-6 max-h-[45vh] overflow-y-auto p-2">
       <div *ngFor="let group of groupedExams" class="bg-white shadow-md rounded-lg overflow-hidden">
         <h4 class="font-semibold p-4 border-b" [ngClass]="getModalityStyles(group.modality).header">
           Modalidade: {{ group.modality }}

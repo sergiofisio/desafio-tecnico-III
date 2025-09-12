@@ -33,6 +33,7 @@ export class PatientList implements OnInit {
   currentPage = 1;
   pageSize = 10;
   totalPatients = 0;
+  totalPages = 0;
 
   constructor(private patientService: Patient, private toastr: ToastrService) {}
 
@@ -50,6 +51,7 @@ export class PatientList implements OnInit {
         next: (response) => {
           this.patients = response.data;
           this.totalPatients = response.total;
+          this.totalPages = response.totalPages;
         },
         error: () => {
           this.error = 'Falha ao carregar pacientes. Tente novamente.';
@@ -66,6 +68,13 @@ export class PatientList implements OnInit {
         },
         error: () => this.toastr.error(`Falha ao deletar o paciente.`),
       });
+    }
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.loadPatients();
     }
   }
 }

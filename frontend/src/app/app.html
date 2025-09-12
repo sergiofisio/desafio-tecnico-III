@@ -1,8 +1,12 @@
 <main class="bg-gradient-to-b text-white from-[#232529] via-[#232529] to-[#0D0D57]">
-  <nav *ngIf="authService.isAuthenticated()" class="text-white p-4 shadow-sm shadow-white">
+  <nav *ngIf="authService.isAuthenticated()" class="text-white p-4 shadow-sm shadow-white h-20">
     <div class="container mx-auto flex justify-between items-center">
       <div class="flex items-center space-x-8">
-        <a routerLink="/patients" class="flex items-center hover:text-gray-300">
+        <a
+          routerLink="/patients"
+          data-testid="brand-link"
+          class="flex items-center hover:text-gray-300"
+        >
           <img class="w-10" src="assets/logo-branco.svg" />
           <div class="flex text-2xl">
             <h1 class="font-bold">mobile</h1>
@@ -14,7 +18,7 @@
     </div>
   </nav>
 
-  <section [@routeAnimations]="prepareRoute(outlet)" class="min-h-screen">
+  <section [@routeAnimations]="prepareRoute(outlet)" class="h-[calc(100vh-5rem)]">
     <router-outlet #outlet="outlet"></router-outlet>
   </section>
 </main>

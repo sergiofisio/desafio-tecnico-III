@@ -3,6 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { App } from './app';
 import { Auth } from './auth/services/auth';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AppComponent', () => {
   let fixture: ComponentFixture<App>;
@@ -11,7 +12,7 @@ describe('AppComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [App, HttpClientTestingModule, RouterTestingModule],
+      imports: [App, HttpClientTestingModule, RouterTestingModule, NoopAnimationsModule],
       providers: [Auth],
     }).compileComponents();
 
@@ -30,8 +31,10 @@ describe('AppComponent', () => {
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('nav')).not.toBeNull();
-    expect(compiled.querySelector('a.font-bold')?.textContent).toContain('Mobilemed');
+    const navLink = compiled.querySelector('[data-testid="brand-link"]');
+
+    expect(navLink).not.toBeNull();
+    expect(navLink?.textContent?.trim()).toContain('mobilemed');
   });
 
   it('should NOT render the navbar when user is not authenticated', () => {

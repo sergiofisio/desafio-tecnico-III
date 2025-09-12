@@ -3,6 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Login } from './login';
 import { Auth } from '../../services/auth';
+import { provideNgxMask } from 'ngx-mask';
 
 describe('LoginComponent', () => {
   let component: Login;
@@ -11,7 +12,7 @@ describe('LoginComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Login, HttpClientTestingModule, RouterTestingModule],
-      providers: [Auth],
+      providers: [Auth, provideNgxMask()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Login);

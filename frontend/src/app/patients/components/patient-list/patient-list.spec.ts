@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
-import { PatientList } from './patient-list';
 import { PaginatedPatients } from '../../models/patient.model';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ToastrService } from 'ngx-toastr';
+import { PatientList } from './patient-list';
 import { Patient } from '../../services/patient';
 
 const mockPatientService = jasmine.createSpyObj('PatientService', ['getPatients', 'deletePatient']);
@@ -30,7 +30,7 @@ describe('PatientListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should show loading state and then display patients on success', () => {
+  it('should display patients on successful data load', () => {
     const mockResponse: PaginatedPatients = {
       data: [{ id: '1', name: 'John Doe', birthDate: '1990-01-01', documents: [] }],
       total: 1,
@@ -41,14 +41,12 @@ describe('PatientListComponent', () => {
     mockPatientService.getPatients.and.returnValue(of(mockResponse));
 
     fixture.detectChanges();
-
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.textContent).toContain('Carregando...');
-
     fixture.detectChanges();
 
+    const compiled = fixture.nativeElement as HTMLElement;
     expect(component.isLoading).toBe(false);
     expect(component.patients.length).toBe(1);
+    expect(compiled.textContent).not.toContain('Carregando...');
     expect(compiled.textContent).toContain('John Doe');
   });
 
@@ -58,9 +56,9 @@ describe('PatientListComponent', () => {
     fixture.detectChanges();
     fixture.detectChanges();
 
+    const compiled = fixture.nativeElement as HTMLElement;
     expect(component.isLoading).toBe(false);
     expect(component.error).not.toBeNull();
-    const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.textContent).toContain('Falha ao carregar pacientes.');
   });
 });

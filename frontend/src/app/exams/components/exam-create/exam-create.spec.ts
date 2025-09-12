@@ -4,6 +4,10 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ExamCreate } from './exam-create';
 import { StateTransfer } from '../../../shared/services/state-transfer';
 
+const mockStateTransferService = {
+  getPatientContext: () => null,
+};
+
 describe('ExamCreateComponent', () => {
   let component: ExamCreate;
   let fixture: ComponentFixture<ExamCreate>;
@@ -11,7 +15,7 @@ describe('ExamCreateComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ExamCreate, HttpClientTestingModule, RouterTestingModule],
-      providers: [{ provide: StateTransfer, useValue: {} }],
+      providers: [{ provide: StateTransfer, useValue: mockStateTransferService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ExamCreate);

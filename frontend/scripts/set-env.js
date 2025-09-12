@@ -1,6 +1,7 @@
-const { writeFile } = require('fs');
+const { writeFile, existsSync, mkdirSync } = require('fs');
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
+const { dirname } = require('path');
 const argv = yargs(hideBin(process.argv)).argv;
 
 require('dotenv').config();
@@ -12,12 +13,18 @@ const targetPath = isProduction
   ? `./src/environments/environment.prod.ts`
   : `./src/environments/environment.ts`;
 
+const envDirectory = dirname(targetPath);
+
 const environmentFileContent = `
 export const environment = {
    production: ${isProduction},
    apiUrl: "${process.env.API_URL}"
 };
 `;
+
+if (!existsSync(envDirectory)) {
+  mkdirSync(envDirectory, { recursive: true });
+}
 
 writeFile(targetPath, environmentFileContent, function (err) {
   if (err) {
